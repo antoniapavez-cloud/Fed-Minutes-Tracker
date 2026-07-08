@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Fed Minutes Tracker</title>
+</head>
+<body style="background:#f5f5f5;min-height:100vh;display:flex;justify-content:center;padding:2rem 1rem">
+<div style="max-width:740px;width:100%;background:#fff;border-radius:10px;padding:2rem 1.5rem 2.5rem;box-shadow:0 1px 4px rgba(0,0,0,.08)">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Aller:ital,wght@0,300;0,700;1,300&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Aller',sans-serif!important}
+:root{--g:#7BC143;--sl:#5D7082;--gr3:#BEBEBE;--gr4:#E6E6E6;--cb:#EBEBEB;--hot:#E07F5C;--warn:#D9A441}
+.w{font-family:'Aller',sans-serif;font-weight:300;padding:1.5rem 1rem 2rem;max-width:700px;color:#000;margin:0 auto}
+.wh{margin-bottom:1.1rem;display:flex;align-items:center;justify-content:space-between}
+.pub-badge{font-size:10px;font-weight:700;letter-spacing:.08em;color:#1a9fcc;text-transform:uppercase;white-space:nowrap}
+.wh h2{font-size:20px;font-weight:700;color:var(--g);letter-spacing:-.01em}
+
+.tabs{display:flex;gap:5px;margin-bottom:1.25rem;padding-bottom:1.1rem;border-bottom:1px solid var(--gr4);flex-wrap:wrap;align-items:center}
+.tb{padding:6px 14px;font-size:12px;border-radius:4px;cursor:pointer;border:1px solid var(--gr3);background:transparent;color:#000;font-weight:300}
+.tb.active{background:var(--sl);border-color:var(--sl);color:#fff;font-weight:700}
+.tb:hover:not(.active){background:var(--gr4)}
+.mp{display:none}.mp.active{display:block}
+
+.strip{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:16px}
+.pdfbtn{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;color:var(--sl);text-decoration:none;border:1px solid var(--gr3);background:var(--cb);padding:7px 14px;border-radius:6px;margin-top:8px;font-weight:700;transition:.15s}
+.pdfbtn .picon{font-size:16px}
+.pdfbtn:hover{background:var(--gr4);border-color:var(--sl)}
+.mc-sm{background:var(--cb);border-radius:6px;padding:9px 11px;border:1px solid #d4d4d4;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.mc-sm .ml{font-size:9px;color:var(--sl);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;font-weight:300}
+.mc-sm .mv{font-size:17px;font-weight:700;color:#000;line-height:1}
+.mc-sm .ms{font-size:10.5px;color:var(--sl);margin-top:4px;font-weight:300;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.exec{background:#EAF0F5;border:1px solid #C7D3DC;border-radius:8px;padding:13px 16px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.exec-t{font-size:10.5px;font-weight:700;color:#34495E;text-transform:uppercase;letter-spacing:.06em;margin-bottom:9px}
+.exec ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.exec li{position:relative;padding-left:14px;font-size:11.5px;line-height:1.5;color:#24313d;font-weight:300}
+.exec li::before{content:'';position:absolute;left:0;top:5px;width:0;height:0;border-style:solid;border-width:4px 0 4px 6px;border-color:transparent transparent transparent #34495E}
+.exec li b{font-weight:700}
+
+details.sec{border:1px solid var(--gr4);border-left:3px solid var(--sl);border-radius:8px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:.15s}
+details.sec[open]{border-color:#d8d8d8}
+summary.sh:hover{background:#fafbfc}
+.numb{width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;margin-top:1px;background:var(--sl)}
+summary.sh{list-style:none;cursor:pointer;padding:13px 16px;display:flex;align-items:flex-start;gap:10px;background:#fff}
+summary.sh::-webkit-details-marker{display:none}
+summary.sh::after{content:'▾';margin-left:auto;color:var(--gr3);font-size:12px;transition:.2s;flex-shrink:0;margin-top:2px}
+details[open] summary.sh::after{transform:rotate(180deg)}
+.sh-txt{flex:1;min-width:0}
+.sh-t{font-size:13.5px;font-weight:700;color:#000;line-height:1.3}
+.sh-tldr{font-size:11px;color:var(--sl);font-weight:300;margin-top:3px;line-height:1.35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.sc{padding:14px 18px 16px 18px;border-top:1px solid var(--gr4)}
+.pl{list-style:none;display:flex;flex-direction:column;gap:11px;margin-top:2px}
+.pli{position:relative;padding-left:16px;font-size:12.5px;line-height:1.6;color:#000;font-weight:300}
+.pli::before{content:'';position:absolute;left:0;top:7px;width:0;height:0;border-style:solid;border-width:4px 0 4px 6px;border-color:transparent transparent transparent var(--g)}
+.pli b{font-weight:700;color:#1a2733}
+.subh{font-size:12.5px;font-weight:700;color:#000;margin:16px 0 7px;display:flex;align-items:center;gap:7px}
+.bdg{font-size:11.5px;font-weight:700;letter-spacing:0}
+.bdg .ar{font-size:13px;font-weight:700}
+.bdg.hot{color:var(--hot)}
+.bdg.cool{color:#4a7a24}
+.bdg.flat{color:var(--sl)}
+.bdg.warn{color:var(--warn)}
+.kvb{background:var(--gr4);border-radius:5px;overflow:hidden;margin:10px 0}
+.kvr{display:grid;grid-template-columns:170px 1fr;gap:0;padding:7px 12px;border-bottom:1px solid #d8d8d8;align-items:center}
+.kvr:last-child{border-bottom:none}
+.kvt{font-size:10px;color:var(--sl);text-transform:uppercase;letter-spacing:.04em;font-weight:300}
+.kvv{font-size:12px;color:#000;font-weight:700}
+.vr{display:flex;gap:5px;flex-wrap:wrap;margin:10px 0 6px}
+.vc{font-size:11px;padding:3px 9px;border-radius:3px;font-weight:300}
+.vf{background:var(--gr4);color:#000;border:1px solid var(--gr3)}
+.vd{background:#E1F1D3;color:#000;border:1px solid #B3D88C}
+.vh{background:#fdeee9;color:#E07F5C;border:1px solid #EAA992}
+.vn{position:relative;padding-left:15px;font-size:12px;color:#000;margin-top:6px;line-height:1.5;font-weight:300}
+.vn::before{content:'';position:absolute;left:0;top:6px;width:0;height:0;border-style:solid;border-width:4px 0 4px 6px;border-color:transparent transparent transparent var(--g)}
+.legend{display:flex;flex-direction:column;gap:4px;margin:4px 0 2px}
+.lg{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--sl);font-weight:300}
+.ld{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+.qb{background:var(--gr4);border-left:3px solid var(--gr3);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12px;color:#000;line-height:1.6;font-weight:300;font-style:italic;margin-top:10px}
+.qa{font-size:11px;color:var(--sl);margin-top:6px;font-style:normal;font-weight:300}
+.note{font-size:10px;color:var(--sl);font-style:italic;margin-top:14px;padding-top:10px;border-top:1px solid var(--gr4);line-height:1.4}
+</style>
+<div class="w">
+  <div class="wh">
+    <h2>Fed Minutes Tracker</h2>
+    <span class="pub-badge">Public information</span>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button class="tb active" onclick="sp('jun26',this)">Jun '26</button>
+    <button class="tb" onclick="sp('apr26',this)">Apr '26</button>
+  </div>
+
+  <!-- ==================== JUN '26 ==================== -->
+  <div class="mp active" id="panel-jun26">
+
+    <div class="strip">
+      <div class="mc-sm"><div class="ml">Fed Funds Rate</div><div class="mv">3.50&ndash;3.75%</div><div class="ms">Unchanged</div></div>
+      <div class="mc-sm"><div class="ml">Next Meeting</div><div class="mv">Jul 28&ndash;29</div><div class="ms">No SEP</div></div>
+    </div>
+
+    <div class="exec">
+      <div class="exec-t">Executive Summary</div>
+      <ul>
+        <li><b>Rate held</b> at 3.50&ndash;3.75% on a unanimous 12&ndash;0 vote; the postmeeting statement was shortened and no longer includes the easing-bias language.</li>
+        <li><b>Leadership change:</b> Kevin Warsh takes over as Chairman; Jerome Powell remains a voting member.</li>
+        <li><b>Inflation still rising:</b> May PCE estimated at 4.1% (core 3.4%), up from April's 3.8% (core 3.3%), on tariffs, Middle East-linked energy costs, and the AI buildout.</li>
+        <li><b>Communications overhaul:</b> the Chairman outlined five task forces to review the Committee's conduct of monetary policy.</li>
+      </ul>
+    </div>
+
+    <details class="sec">
+      <summary class="sh">
+        <span class="numb">01</span>
+        <span class="sh-txt"><div class="sh-t">Market Developments and Open Market Operations</div>
+        <div class="sh-tldr">Mideast optimism eases oil and inflation gauges; equities and yields still climb on AI.</div></span>
+      </summary>
+      <div class="sc">
+        <ul class="pl">
+          <li class="pli"><b>Oil futures</b> and near-term inflation compensation <b>fell materially</b> on optimism around a Middle East resolution and a US&ndash;Iran memorandum of understanding; expected policy rates, Treasury yields, the dollar, and equities <b>all rose</b>.</li>
+          <li class="pli"><b>Policy rate expectations:</b> markets and the Desk survey see <b>no change in June</b>; the median path implies no change through early 2027 and <b>one cut in Q2 2027</b>. Market pricing implies one hike by mid-2027, likely boosted by term premiums.</li>
+          <li class="pli"><b>Treasury yields:</b> the 10-year rose <b>~20bp</b> since April and <b>~50bp</b> since the conflict began; ownership has shifted somewhat toward more price-sensitive private investors.</li>
+          <li class="pli"><b>Equities:</b> the S&amp;P 500 rose <b>nearly 6%</b> intermeeting, led by tech on higher earnings expectations; IPO activity is picking up to help fund AI infrastructure.</li>
+          <li class="pli"><b>Private credit:</b> BDC inflows <b>slowed notably</b> in Q2; net inflows likely turning more negative amid rising redemptions.</li>
+          <li class="pli"><b>International:</b> the 2-year Treasury yield rose more than similar AFE yields; the dollar <b>appreciated modestly</b> on widening rate differentials.</li>
+          <li class="pli"><b>Money markets:</b> generally stable, though repo rates dropped 15bp below IORB in mid-May (EFFR <b>&minus;2bp</b>, the first such move since November); modest ON RRP take-up confirmed the floor held. Reserves remain <b>in the ample range</b>.</li>
+        </ul>
+        <div class="note">The Committee unanimously ratified the Desk's domestic transactions. There were no foreign currency interventions.</div>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary class="sh">
+        <span class="numb">02</span>
+        <span class="sh-txt"><div class="sh-t">Staff Review of the Economic Situation</div>
+        <div class="sh-tldr">Inflation keeps climbing on tariffs, energy and AI demand; growth and labor stay solid.</div></span>
+      </summary>
+      <div class="sc">
+        <div class="kvb">
+          <div class="kvr"><div class="kvt">PCE Total (Apr)</div><div class="kvv">3.8% <span style="font-weight:300">| Core: 3.3%</span></div></div>
+          <div class="kvr"><div class="kvt">PCE Estimated (May)</div><div class="kvv">4.1% <span style="font-weight:300">| Core: 3.4%</span></div></div>
+          <div class="kvr"><div class="kvt">Unemployment (May)</div><div class="kvv">4.3%</div></div>
+          <div class="kvr"><div class="kvt">Avg Hourly Earnings (May)</div><div class="kvv">+3.4% y/y <span style="font-weight:300">(-0.5pp)</span></div></div>
+        </div>
+        <ul class="pl">
+          <li class="pli"><b>Core goods inflation up</b> on tariffs and AI-related price pressures; <b>core services roughly stable</b> (housing deceleration offset by firmer nonhousing services).</li>
+          <li class="pli">Payrolls rose at a <b>solid pace</b> over the three months through May; the employment cost index held at +3.4% y/y, unchanged from a year earlier.</li>
+          <li class="pli"><b>Q2 GDP growth solid</b>; private domestic final purchases outpaced GDP. The <b>AI buildout</b> keeps boosting investment in data centers, high-tech equipment and software; April trade showed strong high-tech goods flows and a jump in energy exports.</li>
+          <li class="pli">Abroad: growth <b>stepped down</b> in Q1 (Canada, euro area, Mexico weak); high-income Asia <b>stayed robust</b> on AI-driven tech exports. The conflict weighed on activity elsewhere via energy costs and weaker confidence, especially lower-income Asia and Europe.</li>
+          <li class="pli">Foreign inflation <b>rose sharply</b> on energy; the ECB and other central banks <b>raised rates</b> or signaled a slower pace of easing.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary class="sh">
+        <span class="numb">03</span>
+        <span class="sh-txt"><div class="sh-t">Staff Review of the Financial Situation</div>
+        <div class="sh-tldr">Stronger data lifts yields and equities; AI optimism offsets the drag from higher rates.</div></span>
+      </summary>
+      <div class="sc">
+        <ul class="pl">
+          <li class="pli">The policy rate path and Treasury yields <b>moved higher</b> on stronger-than-expected data; policy-path uncertainty rose, partly on a higher term premium. Short-term inflation compensation fell but stayed <b>slightly elevated</b>; longer-term measures remained <b>anchored</b>.</li>
+          <li class="pli">Equities <b>rose notably</b> on robust earnings and AI optimism despite higher yields; the VIX slipped below its historical median and corporate spreads <b>narrowed</b>.</li>
+          <li class="pli">Foreign markets moved on prospects &ndash; then confirmation &ndash; of a <b>Strait of Hormuz reopening agreement</b>; AFE policy expectations and inflation compensation fell, though markets still priced further hikes in the euro area and UK. The dollar rose on widening rate differentials.</li>
+          <li class="pli">Credit remained <b>accommodative</b> for large firms and municipalities, <b>somewhat restrictive</b> for small businesses and households. Leveraged loan issuance picked up to a robust pace, while the private credit market kept slowing.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary class="sh">
+        <span class="numb">04</span>
+        <span class="sh-txt"><div class="sh-t">Staff Economic Outlook</div>
+        <div class="sh-tldr">Inflation forecast revised up again; growth seen a touch lower than in April.</div></span>
+      </summary>
+      <div class="sc">
+        <ul class="pl">
+          <li class="pli">Inflation forecast for this year and next <b>revised up</b> from April on incoming data, higher energy/input costs from the conflict, and AI-buildout effects on consumer prices. Total inflation seen slowing in H2 as gasoline prices ease, though core stays little changed this year; inflation steps down next year as tariff effects wane, reaching <b>~2% in 2028</b>.</li>
+          <li class="pli">GDP outlook <b>a bit lower</b> than April's, mostly on incoming data: growth near potential this year and slightly above potential over the next two years, on strong productivity, AI capex and supportive financial conditions. Unemployment stays near its longer-run rate through next year, edging down slightly in 2028.</li>
+          <li class="pli">Uncertainty remains <b>elevated</b> (Middle East conflict, AI investment/adoption effects). Risks to employment/GDP tilted somewhat to the <b>downside</b>; inflation risks more skewed to the <b>upside</b> &ndash; persistence remains the staff's most salient risk.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary class="sh">
+        <span class="numb">05</span>
+        <span class="sh-txt"><div class="sh-t">Participants' Views</div>
+        <div class="sh-tldr">All support holding the rate; the statement is shorter and drops the easing-bias language.</div></span>
+      </summary>
+      <div class="sc">
+        <div class="subh">Inflation <span class="bdg hot"><span class="ar">&uarr;</span> (Rising)</span></div>
+        <ul class="pl"><li class="pli">Inflation increased further, <b>well above 2%</b>, on lingering tariff effects, Strait of Hormuz-related supply disruptions, and strong AI-driven demand. Price pressures <b>broadened</b> (transportation, airfares, petrochemicals, agricultural inputs); services inflation excluding housing stayed high. Medium/long-term expectations still seen near 2%.</li></ul>
+        <div class="subh">Labor Market <span class="bdg flat"><span class="ar">&rarr;</span> (Stable)</span></div>
+        <ul class="pl"><li class="pli">Unemployment stayed near its longer-run level; payroll gains roughly matched labor force growth. Other indicators (openings, claims, layoffs) pointed to a <b>balanced but less dynamic</b> market. Most saw the labor market as <b>not currently a source of inflation pressure</b>.</li></ul>
+        <div class="subh">Activity <span class="bdg cool"><span class="ar">&uarr;</span> (Solid)</span></div>
+        <ul class="pl"><li class="pli"><b>Solid expansion</b> despite elevated uncertainty, led by AI-related business investment and resilient consumption (helped by stock gains and tax refunds for higher-income households); lower-income households <b>leaned more on credit</b> amid high gas and grocery prices.</li></ul>
+        <div class="subh">Monetary Policy <span class="bdg flat"><span class="ar">&rarr;</span> (Hold)</span></div>
+        <ul class="pl"><li class="pli"><b>All participants supported holding the rate</b>. Upside inflation risks stayed elevated while downside employment risks eased slightly; a few saw a case for hiking but backed holding for now. Most preferred not to repeat the easing-bias language and favored a shorter statement; the Chairman outlined <b>five task forces</b> to review the Committee's broader conduct of monetary policy.</li></ul>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary class="sh">
+        <span class="numb">06</span>
+        <span class="sh-txt"><div class="sh-t">Committee Policy Actions</div>
+        <div class="sh-tldr">Unanimous 12&ndash;0 vote: rate unchanged, statement shortened, next meeting July 28&ndash;29.</div></span>
+      </summary>
+      <div class="sc">
+        <div class="vr">
+          <span class="vc vf">Warsh</span><span class="vc vf">Williams</span><span class="vc vf">Barr</span><span class="vc vf">Bowman</span><span class="vc vf">Cook</span><span class="vc vf">Hammack</span><span class="vc vf">Jefferson</span><span class="vc vf">Kashkari</span><span class="vc vf">Logan</span><span class="vc vf">Paulson</span><span class="vc vf">Powell</span><span class="vc vf">Waller</span>
+        </div>
+        <div class="vn"><b>First unanimous vote</b> in some time &ndash; no dissents on the rate decision or on the statement language. The postmeeting statement was <b>substantially shortened</b> and no longer includes forward guidance on the likely direction of future rate moves.</div>
+        <div class="subh">Desk Directive (effective Jun 18, 2026)</div>
+        <ul class="pl">
+          <li class="pli">Rate range: 3.50&ndash;3.75%.</li>
+          <li class="pli">SRP at 3.75%; ON RRP at 3.50% ($160B per-counterparty daily cap).</li>
+          <li class="pli">SOMA purchases of T-bills (and other Treasuries &le;3 years if needed), when appropriate, to maintain ample reserves.</li>
+          <li class="pli">Reinvestment: Treasury maturities at auction, agency maturities into T-bills.</li>
+        </ul>
+        <div class="kvb">
+          <div class="kvr"><div class="kvt">IORB</div><div class="kvv">3.65%</div></div>
+          <div class="kvr"><div class="kvt">Primary Credit Rate</div><div class="kvv">3.75%</div></div>
+        </div>
+        <div class="qb">"The Committee will deliver price stability."</div>
+        <div class="qa">&ndash; FOMC Statement, June 17, 2026</div>
+        <div class="note">Next meeting: July 28&ndash;29, 2026 (no SEP). April minutes approved by notation vote on May 19.</div>
+      </div>
+    </details>
+
+        <a class="pdfbtn" href="pdfs/fomc_jun26.pdf" target="_blank">View full FOMC minutes (PDF)</a>
+
+  </div>
+
+  <!-- ==================== APR '26 ==================== -->
+  <div class="mp" id="panel-apr26">
+
+    <div class="strip">
+      <div class="mc-sm"><div class="ml">Fed Funds Rate</div><div class="mv">3.50&ndash;3.75%</div><div class="ms">Unchanged</div></div>
+      <div class="mc-sm"><div class="ml">Next Meeting</div><div class="mv">Jun 16&ndash;17</div><div class="ms">Includes SEP</div></div>
+    </div>
+
+    <div class="exec">
+      <div class="exec-t">Executive Summary</div>
+      <ul>
+        <li><b>Rate held</b> at 3.50&ndash;3.75%, with the Committee "attentive to the risks to both sides" of its dual mandate.</li>
+        <li><b>Inflation rising:</b> March PCE estimated at 3.5% (core 3.2%), driven by energy prices tied to the Middle East conflict.</li>
+        <li><b>Growing internal split:</b> one dissent for a 25bp cut (Miran) and three votes against the easing-bias language (Hammack, Kashkari, Logan).</li>
+        <li><b>Financial stability:</b> staff still rates system vulnerabilities as "notable" &ndash; elevated hedge fund leverage and private credit strain.</li>
+      </ul>
+    </div>
+
+    <details class="sec">
+      <summary class="sh">
+        <span class="numb">01</span>
+        <span class="sh-txt"><div class="sh-t">Market Developments and Open Market Operations</div>
+        <div class="sh-tldr">The Mideast conflict still dominates asset prices; rates and the dollar ease after the ceasefire.</div></span>
+      </summary>
+      <div class="sc">
+        <ul class="pl">
+          <li class="pli">Equities <b>more than reversed</b> their earlier declines; 2- and 10-year Treasury yields <b>rose further</b>; the dollar retraced part of its earlier appreciation.</li>
+          <li class="pli"><b>Oil:</b> futures curve <b>higher than in March</b>, though its forecasting record is mixed.</li>
+          <li class="pli"><b>Inflation expectations:</b> near-term expectations <b>rose again</b>; longer-term measures remain <b>anchored near 2%</b>.</li>
+          <li class="pli"><b>Policy rate expectations:</b> markets see <b>little change this year</b>; options imply ~30% odds of a hike by Q1 2027. The Desk survey points to <b>two 25bp cuts</b>, but later than before (Q3/Q4 2026 and Q1 2027).</li>
+          <li class="pli"><b>Private credit:</b> signs of <b>stabilization</b> despite continued redemptions.</li>
+          <li class="pli"><b>Money markets:</b> conditions <b>stable</b>; reserves remain <b>in the ample range</b>.</li>
+          <li class="pli"><b>Swap lines:</b> <b>unanimous renewal</b> with Canada, the UK, Japan, the ECB and Switzerland, plus the North American Framework with Mexico and Canada.</li>
+        </ul>
+        <div class="note">The Committee unanimously ratified the Desk's domestic transactions. There were no foreign currency interventions.</div>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary class="sh">
+        <span class="numb">02</span>
+        <span class="sh-txt"><div class="sh-t">Staff Review of the Economic Situation</div>
+        <div class="sh-tldr">Inflation elevated on energy prices; labor market stable but soft; GDP rebounds in Q1.</div></span>
+      </summary>
+      <div class="sc">
+        <div class="kvb">
+          <div class="kvr"><div class="kvt">PCE Total (Feb)</div><div class="kvv">2.8% <span style="font-weight:300">| Core: 3.0%</span></div></div>
+          <div class="kvr"><div class="kvt">PCE Estimated (Mar)</div><div class="kvv">3.5% <span style="font-weight:300">| Core: 3.2%</span></div></div>
+          <div class="kvr"><div class="kvt">Unemployment (Mar)</div><div class="kvv">4.3%</div></div>
+          <div class="kvr"><div class="kvt">Avg Hourly Earnings (Mar)</div><div class="kvv">+3.5% y/y <span style="font-weight:300">(-0.7pp)</span></div></div>
+        </div>
+        <ul class="pl">
+          <li class="pli"><b>Core goods prices rose</b> on tariffs; <b>core services eased</b> as housing costs slowed.</li>
+          <li class="pli">Payrolls <b>rebounded in March</b> after February's drop (health-care strike and harsh weather); on average, job gains <b>stayed low</b>.</li>
+          <li class="pli">Q1 GDP <b>picked up</b> as shutdown effects faded; net exports were <b>a significant drag</b> (tech imports rose more than exports).</li>
+          <li class="pli">Abroad: Asia and China <b>solid</b>; Mexico <b>weak</b> on autos; European and Asian firms report longer delivery times and higher input costs from the conflict.</li>
+          <li class="pli">Foreign inflation <b>rising</b> on energy; only Banxico <b>cut its rate</b> (-25bp).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary class="sh">
+        <span class="numb">03</span>
+        <span class="sh-txt"><div class="sh-t">Staff Review of the Financial Situation</div>
+        <div class="sh-tldr">Markets resilient despite the conflict; financial vulnerabilities remain "notable."</div></span>
+      </summary>
+      <div class="sc">
+        <ul class="pl">
+          <li class="pli">The implied policy rate path <b>rose modestly</b> on conflict-related inflation concerns.</li>
+          <li class="pli">Equities <b>rose</b> despite geopolitical volatility, supported by solid earnings; corporate spreads <b>tightened</b>.</li>
+          <li class="pli">Foreign markets <b>swung sharply</b>; sentiment <b>improved</b> after the ceasefire, weighing on the dollar.</li>
+          <li class="pli">Credit conditions <b>restrictive</b> for small businesses and households; <b>accommodative</b> for large firms and municipalities.</li>
+          <li class="pli">April SLOOS: <b>further easing</b> in lending standards, especially for consumer loans.</li>
+        </ul>
+        <div class="subh">Financial Stability Assessment</div>
+        <ul class="pl">
+          <li class="pli">System vulnerabilities remain rated <b>"notable"</b>: housing valuations near historic highs, elevated leverage at hedge funds (Treasury trades) and life insurers. Bank capital ratios remain high historically, though market-adjusted ratios have declined. Funding risk is <b>moderate</b> (low reliance on uninsured deposits).</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary class="sh">
+        <span class="numb">04</span>
+        <span class="sh-txt"><div class="sh-t">Staff Economic Outlook</div>
+        <div class="sh-tldr">Growth a bit stronger than in March; inflation rises this year, returns to ~2% by late 2027.</div></span>
+      </summary>
+      <div class="sc">
+        <ul class="pl">
+          <li class="pli">Real GDP projected <b>slightly above potential</b>, supported by favorable financial conditions and AI-related capital spending. Unemployment near its longer-run rate through 2027, edging down slightly in 2028.</li>
+          <li class="pli">This year's inflation forecast <b>revised up</b> on the conflict and energy prices, with disinflation expected after H1.</li>
+          <li class="pli">Uncertainty remains <b>elevated</b> (conflict plus AI adoption). <b>Downside</b> risks to employment/GDP; <b>upside</b> risks to inflation &ndash; persistence is the staff's most salient risk.</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary class="sh">
+        <span class="numb">05</span>
+        <span class="sh-txt"><div class="sh-t">Participants' Views</div>
+        <div class="sh-tldr">Nearly all favor holding the rate; many wanted to drop the easing-bias language.</div></span>
+      </summary>
+      <div class="sc">
+        <div class="subh">Inflation <span class="bdg hot"><span class="ar">&uarr;</span> (Rising)</span></div>
+        <ul class="pl"><li class="pli">Headline and core <b>above 2%</b>. Participants cited tariffs, shipping/airfares, fertilizer, and tech/software prices. Long-term expectations <b>stable</b>; near-term expectations <b>up</b>.</li></ul>
+        <div class="subh">Labor Market <span class="bdg flat"><span class="ar">&rarr;</span> (Stable)</span></div>
+        <ul class="pl"><li class="pli">Most see <b>stabilization</b>, though some flag <b>fragility</b> (sector concentration, lower job availability). Risks skewed to the downside on a possible hiring pullback (uncertainty, AI).</li></ul>
+        <div class="subh">Activity <span class="bdg cool"><span class="ar">&uarr;</span> (Solid)</span></div>
+        <ul class="pl"><li class="pli"><b>Solid expansion</b>, strong tech investment, resilient consumption but <b>weak sentiment</b>. Agriculture pressured by fuel and fertilizer costs.</li></ul>
+        <div class="subh">Financial Stability <span class="bdg warn"><span class="ar">&#9888;</span> (Elevated)</span></div>
+        <ul class="pl"><li class="pli">Concerns over <b>private credit</b>, <b>hedge fund leverage</b>, and cybersecurity (tied to AI).</li></ul>
+        <div class="subh">Monetary Policy <span class="bdg flat"><span class="ar">&rarr;</span> (Hold)</span></div>
+        <ul class="pl"><li class="pli"><b>Nearly all supported holding the rate</b>. Many would have dropped the easing-bias language; one participant preferred <b>a 25bp cut</b> on employment risks.</li></ul>
+      </div>
+    </details>
+
+    <details class="sec">
+      <summary class="sh">
+        <span class="numb">06</span>
+        <span class="sh-txt"><div class="sh-t">Committee Policy Actions</div>
+        <div class="sh-tldr">Vote 8&ndash;4: rate unchanged, directive renewed, next meeting June 16&ndash;17.</div></span>
+      </summary>
+      <div class="sc">
+        <div class="vr">
+          <span class="vc vf">Powell</span><span class="vc vf">Williams</span><span class="vc vf">Barr</span><span class="vc vf">Bowman</span><span class="vc vf">Cook</span><span class="vc vf">Jefferson</span><span class="vc vf">Paulson</span><span class="vc vf">Waller</span>
+          <span class="vc vd">Miran (-25bp)</span>
+          <span class="vc vh">Hammack (against easing bias)</span><span class="vc vh">Kashkari (against easing bias)</span><span class="vc vh">Logan (against easing bias)</span>
+        </div>
+        <div class="legend">
+          <span class="lg"><span class="ld vf"></span>Voted for the decision</span>
+          <span class="lg"><span class="ld vd"></span>Dissent &ndash; preferred a rate cut</span>
+          <span class="lg"><span class="ld vh"></span>Dissent &ndash; against the easing-bias language</span>
+        </div>
+        <div class="vn">Miran <b>dissented</b>, preferring a 25bp cut on downside employment risks. Hammack, Kashkari and Logan supported holding the rate but <b>opposed</b> keeping the easing-bias language.</div>
+        <div class="subh">Desk Directive (effective Apr 30, 2026)</div>
+        <ul class="pl">
+          <li class="pli">Rate range: 3.50&ndash;3.75%.</li>
+          <li class="pli">SRP at 3.75%; ON RRP at 3.50% ($160B per-counterparty daily cap).</li>
+          <li class="pli">T-bill purchases to maintain ample reserves.</li>
+          <li class="pli">Reinvestment: Treasury maturities at auction, agency maturities into T-bills.</li>
+        </ul>
+        <div class="kvb">
+          <div class="kvr"><div class="kvt">IORB</div><div class="kvv">3.65%</div></div>
+          <div class="kvr"><div class="kvt">Primary Credit Rate</div><div class="kvv">3.75%</div></div>
+        </div>
+        <div class="qb">"Inflation is elevated, in part reflecting the recent increase in global energy prices."</div>
+        <div class="qa">&ndash; FOMC Statement, April 29, 2026</div>
+        <div class="note">Next meeting: June 16&ndash;17, 2026 (includes SEP). March minutes approved by notation vote on April 7.</div>
+      </div>
+    </details>
+
+        <a class="pdfbtn" href="pdfs/fomc_apr26.pdf" target="_blank">View full FOMC minutes (PDF)</a>
+
+  </div>
+
+</div>
+</div>
+<script>
+function sp(id,btn){
+  document.querySelectorAll('.mp').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tb').forEach(t=>t.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
