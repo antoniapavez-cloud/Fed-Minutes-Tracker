@@ -12,8 +12,10 @@
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Aller',sans-serif!important}
 :root{--g:#7BC143;--sl:#5D7082;--gr3:#BEBEBE;--gr4:#E6E6E6;--cb:#EBEBEB;--hot:#E07F5C;--warn:#D9A441}
 .w{font-family:'Aller',sans-serif;font-weight:300;padding:1.5rem 1rem 2rem;max-width:700px;color:#000;margin:0 auto}
-.wh{margin-bottom:1.1rem;display:flex;align-items:center;justify-content:space-between}
+.wh{margin-bottom:1.1rem;display:flex;align-items:flex-start;justify-content:space-between}
 .pub-badge{font-size:10px;font-weight:700;letter-spacing:.08em;color:#1a9fcc;text-transform:uppercase;white-space:nowrap}
+.pub-meta{text-align:right;margin-top:5px}
+.pub-meta div{font-size:10px;color:var(--sl);font-weight:300;line-height:1.5;white-space:nowrap}
 .wh h2{font-size:20px;font-weight:700;color:var(--g);letter-spacing:-.01em}
 
 .tabs{display:flex;gap:5px;margin-bottom:1.25rem;padding-bottom:1.1rem;border-bottom:1px solid var(--gr4);flex-wrap:wrap;align-items:center}
@@ -84,7 +86,11 @@ details[open] summary.sh::after{transform:rotate(180deg)}
 <div class="w">
   <div class="wh">
     <h2>Fed Minutes Tracker</h2>
-    <span class="pub-badge">Public information</span>
+    <span class="pub-meta">
+      <span class="pub-badge">Public information</span>
+      <div>Update frequency: per FOMC meeting</div>
+      <div>Last updated: Aug 19, 2026</div>
+    </span>
   </div>
 
   <div class="tabs" id="tabs">
@@ -202,7 +208,8 @@ details[open] summary.sh::after{transform:rotate(180deg)}
         <div class="subh">Activity <span class="bdg cool"><span class="ar">&uarr;</span> (Solid)</span></div>
         <ul class="pl"><li class="pli"><b>Solid expansion</b> continued despite elevated uncertainty, led by AI-related business investment and firmer consumer spending; low- and moderate-income households faced <b>growing strain</b> from inflation eroding real income.</li></ul>
         <div class="subh">Monetary Policy <span class="bdg flat"><span class="ar">&rarr;</span> (Hold)</span></div>
-        <ul class="pl"><li class="pli"><b>Most participants supported holding</b> the rate to gather more clarity on the inflation outlook; <b>several favored a 25bp hike</b> now, judging price pressures broad based and policy not yet restrictive enough. The Chairman floated moving to <b>six scheduled meetings a year</b>, but no decision was made.</li></ul>
+        <ul class="pl"><li class="pli"><b>Most participants supported holding</b> the rate to gather more clarity on the inflation outlook; <b>several favored a 25bp hike</b> now, judging price pressures broad based and policy not yet restrictive enough.</li>
+        <li class="pli">The Chairman raised the idea of moving to <b>six scheduled meetings a year</b> (from eight), arguing it would let more information accumulate between meetings; he asked the Committee for input, but <b>no decision was made</b> and 2026's calendar is unaffected.</li></ul>
       </div>
     </details>
 
