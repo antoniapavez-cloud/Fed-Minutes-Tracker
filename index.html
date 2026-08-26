@@ -12,13 +12,13 @@
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Aller',sans-serif!important}
 :root{--g:#7BC143;--sl:#5D7082;--gr3:#BEBEBE;--gr4:#E6E6E6;--cb:#EBEBEB;--hot:#E07F5C;--warn:#D9A441}
 .w{font-family:'Aller',sans-serif;font-weight:300;padding:1.5rem 1rem 2rem;max-width:700px;color:#000;margin:0 auto}
-.wh{margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between}
-.pub-badge{line-height:1;font-size:10px;font-weight:700;letter-spacing:.08em;color:#1a9fcc;text-transform:uppercase;white-space:nowrap}
-.pub-meta{text-align:right;margin-top:5px}
-.pub-meta div{font-size:9px;color:#BEBEBE;font-weight:300;line-height:1.6;white-space:nowrap;text-align:right}
+.wh{margin-bottom:1.25rem;display:flex;align-items:flex-start;justify-content:space-between}
 .wh h2{line-height:1;font-size:20px;font-weight:700;color:var(--g);letter-spacing:-.01em}
+.wh-meta{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.wh-tag{font-size:10px;font-weight:700;letter-spacing:.08em;color:#1A9FCC;text-transform:uppercase;line-height:1}
+.wh-sub{font-size:10px;font-weight:300;color:#969696;line-height:1.3;white-space:nowrap}
 
-.tabs{display:flex;gap:5px;margin-bottom:1.25rem;padding-bottom:1.1rem;border-bottom:1px solid var(--gr4);flex-wrap:wrap;align-items:center}
+.mfo-tabs{display:flex;gap:5px;margin:0 0 1.25rem;padding-bottom:1.1rem;border-bottom:1px solid var(--gr4);flex-wrap:wrap;align-items:center}
 .tb{padding:6px 14px;font-size:12px;border-radius:4px;cursor:pointer;border:1px solid var(--gr3);background:transparent;color:#000;font-weight:300}
 .tb.active{background:var(--sl);border-color:var(--sl);color:#fff;font-weight:700}
 .tb:hover:not(.active){background:var(--gr4)}
@@ -28,19 +28,19 @@
 .pdfbtn{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;color:var(--sl);text-decoration:none;border:1px solid var(--gr3);background:var(--cb);padding:7px 14px;border-radius:6px;margin-top:8px;font-weight:700;transition:.15s}
 .pdfbtn .picon{font-size:16px}
 .pdfbtn:hover{background:var(--gr4);border-color:var(--sl)}
-.mc-sm{background:var(--cb);border-radius:6px;padding:9px 11px;border:1px solid #d4d4d4;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.mc-sm{background:var(--cb);border-radius:6px;padding:10px;border:1px solid #d4d4d4;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .mc-sm .ml{font-size:9px;color:var(--sl);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em;font-weight:300}
 .mc-sm .mv{font-size:17px;font-weight:700;color:#000;line-height:1}
 .mc-sm .ms{font-size:10.5px;color:var(--sl);margin-top:4px;font-weight:300;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.exec{background:#EAF0F5;border:1px solid #C7D3DC;border-radius:8px;padding:13px 16px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.exec{background:#EAF0F5;border:1px solid #C7D3DC;border-radius:8px;padding:13px 16px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
 .exec-t{font-size:10.5px;font-weight:700;color:#34495E;text-transform:uppercase;letter-spacing:.06em;margin-bottom:9px}
 .exec ul{list-style:none;display:flex;flex-direction:column;gap:10px}
 .exec li{position:relative;padding-left:14px;font-size:11.5px;line-height:1.5;color:#24313d;font-weight:300}
 .exec li::before{content:'';position:absolute;left:0;top:5px;width:0;height:0;border-style:solid;border-width:4px 0 4px 6px;border-color:transparent transparent transparent #34495E}
 .exec li b{font-weight:700}
 
-details.sec{border:1px solid var(--gr4);border-left:3px solid var(--sl);border-radius:8px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:.15s}
+details.sec{border:1px solid var(--gr4);border-left:3px solid var(--sl);border-radius:8px;margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04);transition:.15s}
 details.sec[open]{border-color:#d8d8d8}
 summary.sh:hover{background:#fafbfc}
 .numb{width:23px;height:23px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;margin-top:1px;background:var(--sl)}
@@ -86,14 +86,14 @@ details[open] summary.sh::after{transform:rotate(180deg)}
 <div class="w">
   <div class="wh">
     <h2>Fed Minutes Tracker</h2>
-    <span class="pub-meta">
-      <span class="pub-badge">Public information</span>
-      <div>Periodicidad: por reuni&oacute;n FOMC</div>
-      <div>&Uacute;ltima actualizaci&oacute;n: 19 ago 2026</div>
-    </span>
+    <div class="wh-meta">
+      <span class="wh-tag">Public information</span>
+      <span class="wh-sub">Periodicidad: por reuni&oacute;n FOMC</span>
+      <span class="wh-sub">&Uacute;ltima actualizaci&oacute;n: 19 ago 2026</span>
+    </div>
   </div>
 
-  <div class="tabs" id="tabs">
+  <div class="mfo-tabs" id="tabs">
     <button class="tb active" onclick="sp('jul26',this)">Jul '26</button>
     <button class="tb" onclick="sp('jun26',this)">Jun '26</button>
     <button class="tb" onclick="sp('apr26',this)">Apr '26</button>
