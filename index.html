@@ -82,20 +82,19 @@ details[open] summary.sh::after{transform:rotate(180deg)}
 .qb{background:var(--gr4);border-left:3px solid var(--gr3);padding:10px 13px;border-radius:0 5px 5px 0;font-size:12px;color:#000;line-height:1.6;font-weight:300;font-style:italic;margin-top:10px}
 .qa{font-size:11px;color:var(--sl);margin-top:6px;font-style:normal;font-weight:300}
 .note{font-size:10px;color:var(--sl);font-style:italic;margin-top:14px;padding-top:10px;border-top:1px solid var(--gr4);line-height:1.4}
-.btn-manual{display:inline-flex;align-items:center;font-size:11px;color:var(--sl);background:transparent;border:1px solid var(--gr3);padding:6px 13px;border-radius:6px;margin-top:8px;margin-left:8px;font-weight:300;cursor:pointer;transition:.15s}
-.btn-manual:hover{background:var(--gr4)}
-.modal-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999;align-items:center;justify-content:center}
+.btn-manual{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;font-size:12px;font-weight:300;font-family:'Aller',sans-serif;border:1px solid var(--gr3);border-radius:5px;background:transparent;color:var(--sl);cursor:pointer;transition:all .15s}
+.btn-manual:hover{background:var(--gr4);color:#000}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center}
 .modal-overlay.open{display:flex}
-.modal-box{background:#fff;max-width:520px;width:90%;border-radius:10px;padding:24px 26px;position:relative;box-shadow:0 4px 20px rgba(0,0,0,.15)}
-.modal-close{position:absolute;top:14px;right:16px;cursor:pointer;color:var(--sl);font-size:16px;background:none;border:none;line-height:1}
-.modal-title{font-size:17px;font-weight:700;color:var(--g);margin-bottom:4px}
-.modal-sub{font-size:12px;color:var(--sl);font-weight:300;margin-bottom:18px;line-height:1.5}
-.modal-steps{list-style:none;counter-reset:step;display:flex;flex-direction:column;gap:16px;margin-bottom:16px}
-.modal-steps li{counter-increment:step;position:relative;padding-left:24px;font-size:13px;color:#000;font-weight:300;line-height:1.55}
-.modal-steps li::before{content:counter(step)".";position:absolute;left:0;top:0;font-weight:700;color:#000}
-.modal-steps li b{font-weight:700}
-.modal-steps li a{color:var(--g);font-weight:700;text-decoration:none}
-.modal-foot{font-size:11px;color:var(--sl);font-style:italic;line-height:1.45;padding-top:14px;border-top:1px solid var(--gr4)}
+.modal-box{background:#fff;border-radius:10px;max-width:680px;width:90%;padding:28px 28px 24px;box-shadow:0 8px 32px rgba(0,0,0,.18);position:relative}
+.modal-close{position:absolute;top:14px;right:16px;font-size:18px;background:none;border:none;cursor:pointer;color:var(--sl);line-height:1}
+.modal-title{font-size:14px;font-weight:700;color:var(--g);margin-bottom:4px}
+.modal-sub{font-size:11px;color:var(--sl);font-weight:300;margin-bottom:18px}
+.modal-step{display:flex;gap:12px;margin-bottom:14px;align-items:flex-start}
+.modal-step-body{font-size:12px;font-weight:300;color:#000;line-height:1.5}
+.modal-step-body b{font-weight:700}
+.modal-divider{border:none;border-top:1px solid var(--gr4);margin:16px 0}
+.modal-note{font-size:11px;color:var(--sl);font-weight:300;line-height:1.5;font-style:italic}
 </style>
 <div class="w">
   <div class="wh">
@@ -262,7 +261,9 @@ details[open] summary.sh::after{transform:rotate(180deg)}
     </details>
 
     <a class="pdfbtn" href="FOMC_Minutes_Jul26.pdf" target="_blank">View full FOMC minutes (PDF)</a>
-    <button class="btn-manual" onclick="document.getElementById('manualModal').classList.add('open')">Manual de actualizaci&oacute;n</button>
+    <div style="text-align:right;padding:16px 0 4px">
+      <button class="btn-manual" onclick="document.getElementById('updateModal').classList.add('open')">Manual de actualizaci&oacute;n</button>
+    </div>
 
   </div>
 
@@ -567,19 +568,29 @@ details[open] summary.sh::after{transform:rotate(180deg)}
 </div>
 </div>
 
-<div class="modal-overlay" id="manualModal" onclick="if(event.target===this)this.classList.remove('open')">
+<div class="modal-overlay" id="updateModal" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal-box">
-    <button class="modal-close" onclick="document.getElementById('manualModal').classList.remove('open')">&#10005;</button>
+    <button class="modal-close" onclick="document.getElementById('updateModal').classList.remove('open')">&#10005;</button>
     <div class="modal-title">Manual de actualizaci&oacute;n</div>
     <div class="modal-sub">C&oacute;mo agregar una nueva reuni&oacute;n FOMC al tracker</div>
-    <ol class="modal-steps">
-      <li>Tras cada reuni&oacute;n del FOMC, entra a <a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank">www.federalreserve.gov</a> y descarga las <b>FOMC Minutes</b> en PDF, en la secci&oacute;n "Meeting calendars, statements, and minutes".</li>
-      <li>Guarda el PDF en tu carpeta local, siguiendo siempre el mismo formato de nombre: <b>FOMC_Minutes_MesAA.pdf</b> (ej. FOMC_Minutes_Sep26.pdf).</li>
-      <li>Adjunta ese PDF aqu&iacute; mismo, en este proyecto de Claude, y p&iacute;dele que <b>agregue la nueva reuni&oacute;n al tracker</b>. Claude arma el panel nuevo con las 6 secciones, el resumen ejecutivo y el bot&oacute;n del PDF.</li>
-      <li>Descarga el <b>index.html</b> actualizado que Claude te entregue, junto con el PDF renombrado.</li>
-      <li>Sube ambos archivos a la ra&iacute;z de tu repositorio en GitHub (<b>Add file &rarr; Upload files</b>) y espera un par de minutos a que se publique.</li>
-    </ol>
-    <div class="modal-foot">El tracker se actualiza reuni&oacute;n por reuni&oacute;n &ndash; hay 8 reuniones FOMC al a&ntilde;o. Mant&eacute;n siempre el mismo formato de nombre de archivo para que el bot&oacute;n del PDF no se rompa.</div>
+    <div class="modal-step">
+      <div style="font-size:12px;font-weight:700;color:#000;min-width:20px;flex-shrink:0;margin-top:1px">1.</div>
+      <div class="modal-step-body">Tras cada reuni&oacute;n del FOMC, entra a <a href="https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm" target="_blank" style="color:var(--g);font-weight:700;text-decoration:none">www.federalreserve.gov</a> y descarga las <b>FOMC Minutes</b> en PDF, en la secci&oacute;n "Meeting calendars, statements, and minutes".</div>
+    </div>
+    <div class="modal-step">
+      <div style="font-size:12px;font-weight:700;color:#000;min-width:20px;flex-shrink:0;margin-top:1px">2.</div>
+      <div class="modal-step-body">Guarda el PDF en: <b>W:\4. Informes\&ndash;&ndash; Informes Mensuales\Fed Meetings\Minutas Fed</b>, siguiendo siempre el mismo formato de nombre: <b>FOMC_Minutes_MesAA.pdf</b> (ej. FOMC_Minutes_Sep26.pdf).</div>
+    </div>
+    <div class="modal-step">
+      <div style="font-size:12px;font-weight:700;color:#000;min-width:20px;flex-shrink:0;margin-top:1px">3.</div>
+      <div class="modal-step-body">Adjunta ese PDF aqu&iacute; mismo, en este proyecto de Claude, y p&iacute;dele que <b>agregue la nueva reuni&oacute;n al tracker</b>. Claude arma el panel nuevo con las 6 secciones, el resumen ejecutivo y el bot&oacute;n del PDF.</div>
+    </div>
+    <div class="modal-step">
+      <div style="font-size:12px;font-weight:700;color:#000;min-width:20px;flex-shrink:0;margin-top:1px">4.</div>
+      <div class="modal-step-body">Descarga el HTML actualizado que Claude te entregue y gu&aacute;rdalo (reemplazando el anterior) en: <b>G:\Unidades compartidas\MFO-Dashboards\Monitores\Estrategia</b>.</div>
+    </div>
+    <hr class="modal-divider">
+    <div class="modal-note">El tracker se actualiza reuni&oacute;n por reuni&oacute;n &ndash; hay 8 reuniones FOMC al a&ntilde;o. Mant&eacute;n siempre el mismo formato de nombre de archivo para que el bot&oacute;n del PDF no se rompa.</div>
   </div>
 </div>
 
